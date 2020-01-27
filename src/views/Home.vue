@@ -484,7 +484,7 @@ export default {
   mounted() {
     //Initial Ajax Request
     axios
-      .get(`https://5e2e2e5c523d3b000824d717--vigilant-ardinghelli-07ef5c.netlify.com/api.json`)
+      .get(`/api.json`)
       .then(response => {
         // JSON responses are automatically parsed.
 
