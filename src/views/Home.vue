@@ -104,9 +104,6 @@
 }
 
 
-.home {
-  height: 100%;
-}
 </style>
 <script>
 // @ is an alias to /src
