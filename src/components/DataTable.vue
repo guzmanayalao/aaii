@@ -364,7 +364,6 @@ export default {
 .tableWrapper {
   display: flex;
   align-items: flex-start;
-  height: 100%;
   flex-direction: column;
   background: #fff;
   box-shadow: 0px 20px 54px -13px rgba(0, 0, 0, 0.15);
@@ -457,6 +456,7 @@ table {
       display: flex;
       width: 100%;
       justify-content: center;
+      height: 20px;
       img {
         width: 15px;
         margin-left: 1rem;

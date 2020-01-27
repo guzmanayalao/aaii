@@ -32,6 +32,5 @@ img.nba {
   letter-spacing: -0.5px;
   text-align: center;
   color: #2c3e50;
-  height: 100%;
 }
 </style>
