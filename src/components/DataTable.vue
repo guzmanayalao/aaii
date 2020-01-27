@@ -457,6 +457,7 @@ table {
       width: 100%;
       justify-content: center;
       height: 20px;
+      align-items: center;
       img {
         width: 15px;
         margin-left: 1rem;
