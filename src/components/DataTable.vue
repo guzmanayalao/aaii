@@ -6,7 +6,7 @@
       <th></th>
       <th class="hover" @click="objSort('teamName')">
         <div>
-          <span>Team Name</span>
+          <span>Team</span>
           <img
             src="/img/sort-amount-up-alt-solid.svg"
             alt
@@ -36,9 +36,9 @@
           />
         </div>
       </th>
-      <th class="hover" @click="objSort('wins')">
+      <th class="hover" :class="{'hideMobile': toggleColumn == true}" @click="objSort('wins')">
         <div>
-          <span>Wins</span>
+          <span>W</span>
           <img
             src="/img/sort-amount-up-alt-solid.svg"
             alt
@@ -68,9 +68,9 @@
           />
         </div>
       </th>
-      <th class="hover" @click="objSort('losses')">
+      <th class="hover" :class="{'hideMobile': toggleColumn == true}" @click="objSort('losses')">
         <div>
-          <span>Losses</span>
+          <span>L</span>
           <img
             src="/img/sort-amount-up-alt-solid.svg"
             alt
@@ -100,8 +100,8 @@
           />
         </div>
       </th>
-      <th class="hover" @click="objSort('winPct')">
-        <div>
+      <th class="hover" :class="{'hideMobile': toggleColumn == false}" @click="objSort('winPct')" >
+        <div class="smallCell">
           <span>Win PCT</span>
           <img
             src="/img/sort-amount-up-alt-solid.svg"
@@ -132,8 +132,8 @@
           />
         </div>
       </th>
-      <th class="hover" @click="objSort('gb')">
-        <div>
+      <th class="hover" :class="{'hideMobile': toggleColumn == false}" @click="objSort('gb')">
+        <div class="smallCell">
           <span>GB</span>
           <img
             src="/img/sort-amount-up-alt-solid.svg"
@@ -164,55 +164,39 @@
           />
         </div>
       </th>
-
-      <th></th>
+      <th class="hideMobile"></th>
+      <th class="hover showMobile" @click="toggleColumn = !toggleColumn">
+          <img src="/img/ellipsis-h-solid.svg">
+      </th>
     </thead>
-    <transition-group name="list-complete" tag="tbody" v-if="tableName == 'east'">
+    <transition-group name="list-complete" tag="tbody">
       <tr
         v-for="team in tempEast"
         :key="team.teamId"
         class="list-complete-item"
-        :class="{ isTop8: team.top8 }"
+        :class="{ isTop8: team.top8, 'west': tabWest, 'league': tabLeague }"
       >
         <td>{{ team.confRank }}</td>
         <td class="image">
           <img :src="team.logo" alt />
         </td>
         <td>
-          {{ team.teamSitesOnly.teamName }}
-          {{ team.teamSitesOnly.teamNickname }}
+          <a :href="team.espn" class="link">
+              {{ team.teamSitesOnly.teamName }}
+              {{ team.teamSitesOnly.teamNickname }}
+          </a>
+
         </td>
-        <td>{{ team.win }}</td>
-        <td>{{ team.loss }}</td>
-        <td>{{ team.winPctV2 }}%</td>
-        <td>{{ team.gamesBehind }}</td>
-        <td>
-          <a class="learnMoreButton" :href="team.espn">ESPN</a>
+        <td :class="{'hideMobile': toggleColumn === true}">{{ team.win }}</td>
+        <td :class="{'hideMobile': toggleColumn === true}">{{ team.loss }}</td>
+        <td :class="{'hideMobile': toggleColumn === false}">{{ team.winPctV2 }}%</td>
+        <td :class="{'hideMobile': toggleColumn === false}">
+            <div class="smallCell">{{ team.gamesBehind }}</div>
         </td>
-      </tr>
-    </transition-group>
-    <transition-group name="list-complete" tag="tbody" v-if="tableName == 'west'">
-      <tr
-        v-for="team in tempWest"
-        :key="team.teamId"
-        class="list-complete-item"
-        :class="{ isTop8: team.top8 }"
-      >
-        <td>{{ team.confRank }}</td>
-        <td class="image">
-          <img :src="team.logo" alt />
+        <td class="hideMobile" :class="{'hideMobile': toggleColumn === false }">
+          <a class="learnMoreButton" :class="{'buttonWest': tabWest === true, 'buttonWhite': tabLeague === true }" :href="team.espn">ESPN</a>
         </td>
-        <td>
-          {{ team.teamSitesOnly.teamName }}
-          {{ team.teamSitesOnly.teamNickname }}
-        </td>
-        <td>{{ team.win }}</td>
-        <td>{{ team.loss }}</td>
-        <td>{{ team.winPctV2 }}%</td>
-        <td>{{ team.gamesBehind }}</td>
-        <td>
-          <a class="learnMoreButton" :href="team.espn">ESPN</a>
-        </td>
+        <td class="showMobile"></td>
       </tr>
     </transition-group>
   </table>
@@ -233,17 +217,22 @@ export default {
     },
     teamNameOrder: {
       type: String
+    }, 
+    tabWest: {
+      type: Boolean
     },
-    tableName: {
-      type: String
+    tabLeague: {
+      type: Boolean
     }
+
   },
   data() {
     return {
       count: 0,
       sort: false,
       teamNameOrderProp: this.teamNameOrder,
-      sortByNameProp: this.sortByName
+      sortByNameProp: this.sortByName,
+      toggleColumn: false
     };
   },
   methods: {
@@ -252,7 +241,6 @@ export default {
         this.tempEast = JSON.parse(JSON.stringify(this.east));
         this.count = 0;
         this.sort = false;
-        console.log(this.sortByNameProp, sortBy);
       }
       this.sortByNameProp = sortBy;
       this.count++;
@@ -272,7 +260,7 @@ export default {
             );
           } else if (sortBy === "wins") {
             this.tempEast.sort((a, b) =>
-              parseFloat(a.winPct) > parseFloat(b.winPct) ? 1 : -1
+              parseInt(a.win) > parseInt(b.win) ? 1 : -1
             );
           } else if (sortBy === "losses") {
             this.tempEast.sort((a, b) =>
@@ -305,4 +293,197 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="scss">
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.3s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+  transition: all 0.3s;
+}
+.list-complete-item {
+  transition: all 1s;
+  margin-right: 10px;
+}
+.list-complete-enter, .list-complete-leave-to
+/* .list-complete-leave-active below version 2.1.8 */ {
+  opacity: 0;
+  transform: translateY(30px);
+}
+.list-complete-leave-active {
+  position: absolute;
+}
+.isTop8 {
+  background: linear-gradient(
+    180deg,
+    rgba(147, 230, 255, 0.145) 0%,
+    rgba(151, 231, 251, 0.18) 100%
+  );
+
+  border: 1px solid white;
+  position: relative;
+  z-index: 1;
+  margin: 1rem;
+  font-weight: 700;
+  &.west {
+    background: rgba(255,0,0,0.05);
+    &:hover {
+      background: darken(rgba(255,0,0,0.05), 2);
+    }
+  }
+  &.league {
+    background: rgba(0,0,0,0.05);
+    &:hover {
+      background: darken(rgba(0,0,0,0.05), 2);
+    }
+
+  }
+  &:hover {
+    td {
+      background: darken(rgba(151, 231, 251, 0.18), 2);
+      transition: all 0.4s;
+    }
+  }
+}
+.showMobile {
+  display: none; 
+  @media screen and (max-width: 600px) {
+    display: table-cell;
+  }
+  img {
+    width: 10px;
+  }
+}
+.hideMobile {
+  @media screen and (max-width: 600px) {
+    display: none;
+  }
+}
+
+.tableWrapper {
+  display: flex;
+  align-items: flex-start;
+  height: 100%;
+  flex-direction: column;
+  background: #fff;
+  box-shadow: 0px 20px 54px -13px rgba(0, 0, 0, 0.15);
+  border-radius: 1rem;
+  margin: auto;
+  max-width: 1200px;
+  overflow-x: hidden;
+      @media screen and (max-width: 600px) {
+        border-radius: 0;
+      }
+
+  h1 {
+    margin: 0;
+    padding: 2rem 3rem;
+    @media screen and (max-width: 600px) {
+        padding: 1rem;
+        font-size: 17px;
+        margin: auto;
+        text-align: center;
+    }
+  }
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  @media screen and (max-width: 600px) {
+    font-size: 11px;
+  }
+  tr {
+    border-bottom: 1px solid #eee;
+    transition: all 0.2s;
+
+    &:hover {
+      td {
+        background: darken(#fff, 2);
+        transition: all 0.2s;
+
+      }
+    }
+  }
+  td {
+    padding: 0.2rem 0;
+    > a.link{
+        color: black;
+        &:link,
+        &:visited,
+        &:active {
+          color: black;
+        }
+      }
+    .learnMoreButton {
+      background: rgb(0, 132, 255);
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      box-shadow: 0px 10px 14px -13px rgba(0, 0, 0, 0.35);
+      border-radius: 1rem;
+      font-size: 14px;
+      display: block;
+      max-width: 50px;
+      margin: auto;
+      transform: translateY(0px);
+      transition: transform 0.2s;
+
+      &:hover {
+        transition: transform 0.2s;
+
+        transform: translateY(-3px);
+      }
+      &.buttonWest {
+        background: rgb(255, 0, 0);
+      }
+      &.buttonWhite {
+        background: white;
+        color: black;
+      }
+      
+    }
+    &.image {
+      width: 50px;
+    }
+  }
+  th {
+    padding: 1rem;
+    @media screen and (max-width: 600px) {
+      padding: .5rem .2rem;
+    }
+    div {
+      display: flex;
+      width: 100%;
+      justify-content: center;
+      img {
+        width: 15px;
+        margin-left: 1rem;
+        opacity: 0.15;
+        transition: all 0.2s;
+        @media screen and (max-width: 600px) {
+          width: 10px;
+        }
+        &.sortisactive {
+          opacity: 1;
+          transition: all 0.2s;
+        }
+      }
+    }
+
+    &.hover {
+      cursor: pointer;
+      &:hover {
+        background: darken(#ffffff, 5);
+      }
+    }
+  }
+  img {
+    width: 45px;
+    @media screen and (max-width: 600px) {
+          width: 30px;
+        }
+  }
+}
+</style>
