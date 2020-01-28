@@ -31,29 +31,29 @@
         <transition name="fade">
           <DataTable
             v-if="tabEast"
-            :east="east"
-            :tempEast="tempEast"
+            :mainData="east"
+            :tempData="tempEast"
             :sortByName="sortByName"
-            :teamNameOrder="teamNameOrder"
+            :sortState="sortState"
           />
         </transition>
         <transition name="fade">
           <DataTable
             v-if="tabLeague"
-            :east="nba"
-            :tempEast="tempNBA"
+            :mainData="nba"
+            :tempData="tempNBA"
             :sortByName="sortByName"
-            :teamNameOrder="teamNameOrder"
+            :sortState="sortState"
             :tabLeague="tabLeague"
           />
         </transition>
         <transition name="fade">
           <DataTable
             v-if="tabWest"
-            :east="west"
-            :tempEast="tempWest"
+            :mainData="west"
+            :tempData="tempWest"
             :sortByName="sortByName"
-            :teamNameOrder="teamNameOrder"
+            :sortState="sortState"
             :tabWest="tabWest"
           />
         </transition>
@@ -62,7 +62,10 @@
   </div>
 </template>
 <style lang="scss">
-.tabGroup {
+
+.home {
+  margin-bottom: 3rem;
+  .tabGroup {
   margin-bottom: 1rem;
   display: inline-block;
   box-shadow: 0px 5px 5px -1px rgba(0, 0, 0, 0.15);
@@ -99,8 +102,6 @@
     }
   }
 }
-.home {
-  margin-bottom: 3rem;
 }
 
 
@@ -115,17 +116,15 @@ export default {
   components: { DataTable },
   data() {
     return {
+      erros: [],
       nba: {},
       tempNBA: {},
-      erros: [],
-      standings: {},
-      teams: [],
       east: {},
       tempEast: {},
       west: {},
       tempWest: {},
       count: 0,
-      teamNameOrder: "pending",
+      sortState: "pending",
       sortByName: "teamName",
       tabEast: true,
       tabWest: false,
@@ -139,8 +138,7 @@ export default {
     axios
       .get(`/api.json`)
       .then(response => {
-        // JSON responses are automatically parsed.
-
+        // Using JSON stringify to make deep copy of objects since javascript deals with them by reference
         this.east = JSON.parse(
           JSON.stringify(response.data.league.standard.conference.east)
         );
@@ -156,6 +154,7 @@ export default {
             team.top8 = true;
           }
         });
+        //Add logo To dataset
         this.west.forEach(function(team) {
           team.logo = `//cdn.nba.net/assets/logos/teams/secondary/web/${team.teamSitesOnly.teamTricode}.svg`;
           team.espn = `https://www.espn.com/nba/team/_/name/${team.teamSitesOnly.teamTricode}/${team.teamSitesOnly.teamName}-${team.teamSitesOnly.teamCode}`;
@@ -163,7 +162,7 @@ export default {
             team.top8 = true;
           }
         });
-
+        //Using Spread operator to combine objects into one
         this.nba = [
           ...JSON.parse(
             JSON.stringify(response.data.league.standard.conference.east)
@@ -172,6 +171,7 @@ export default {
             JSON.stringify(response.data.league.standard.conference.west)
           )
         ];
+        //Get Images for this dataset aswell 
         this.nba.forEach(function(team) {
           team.logo = `//cdn.nba.net/assets/logos/teams/secondary/web/${team.teamSitesOnly.teamTricode}.svg`;
           team.espn = `https://www.espn.com/nba/team/_/name/${team.teamSitesOnly.teamTricode}/${team.teamSitesOnly.teamName}-${team.teamSitesOnly.teamCode}`;
@@ -179,8 +179,11 @@ export default {
             team.top8 = true;
           }
         });
+        
+        //Sort NBA standings by win percentage (visible in 'league' tab)
         this.nba.sort((a, b) => (a.winPctV2 > b.winPctV2 ? -1 : 1));
-        //todo needs tempNBA?
+        
+        //Creating temporary versions of the data so that I do not manipulate original data
         this.tempEast = JSON.parse(JSON.stringify(this.east));
         this.tempWest = JSON.parse(JSON.stringify(this.west));
         this.tempNBA = JSON.parse(JSON.stringify(this.nba));
@@ -191,14 +194,6 @@ export default {
       });
   },
   created() {
-    // async / await version (created() becomes async created())
-    //
-    // try {
-    //   const response = await axios.get(`http://jsonplaceholder.typicode.com/posts`)
-    //   this.posts = response.data
-    // } catch (e) {
-    //   this.errors.push(e)
-    // }
   }
 };
 </script>

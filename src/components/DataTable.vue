@@ -9,29 +9,23 @@
           <span>Team</span>
           <img
             src="/img/sort-amount-up-alt-solid.svg"
-            alt
-            :class="{
-              sortisactive:
-                teamNameOrderProp != 'pending' && sortByNameProp === 'teamName'
-            }"
             v-if="
               sortByNameProp !== 'teamName' ||
-                (sortByNameProp == 'teamName' && teamNameOrderProp == 'pending')
+                (sortByNameProp == 'teamName' && sortStateProp == 'pending')
             "
           />
           <img
             :class="{
               sortisactive:
-                teamNameOrderProp != 'pending' && sortByNameProp === 'teamName'
+                sortStateProp != 'pending' && sortByNameProp === 'teamName'
             }"
             :src="
-              teamNameOrderProp === 'asc' && sortByNameProp === 'teamName'
+              sortStateProp === 'asc' && sortByNameProp === 'teamName'
                 ? '/img/sort-amount-up-alt-solid.svg'
-                : teamNameOrderProp === 'desc' && sortByNameProp === 'teamName'
+                : sortStateProp === 'desc' && sortByNameProp === 'teamName'
                 ? '/img/sort-amount-down-alt-solid.svg'
                 : ''
             "
-            alt
             v-else
           />
         </div>
@@ -41,25 +35,20 @@
           <span>W</span>
           <img
             src="/img/sort-amount-up-alt-solid.svg"
-            alt
-            :class="{
-              sortisactive:
-                teamNameOrderProp != 'pending' && sortByNameProp === 'wins'
-            }"
             v-if="
               sortByNameProp !== 'wins' ||
-                (sortByNameProp == 'wins' && teamNameOrderProp == 'pending')
+                (sortByNameProp == 'wins' && sortStateProp == 'pending')
             "
           />
           <img
             :class="{
               sortisactive:
-                teamNameOrderProp != 'pending' && sortByNameProp === 'wins'
+                sortStateProp != 'pending' && sortByNameProp === 'wins'
             }"
             :src="
-              teamNameOrderProp === 'asc' && sortByNameProp === 'wins'
+              sortStateProp === 'asc' && sortByNameProp === 'wins'
                 ? '/img/sort-amount-up-alt-solid.svg'
-                : teamNameOrderProp === 'desc' && sortByNameProp === 'wins'
+                : sortStateProp === 'desc' && sortByNameProp === 'wins'
                 ? '/img/sort-amount-down-alt-solid.svg'
                 : ''
             "
@@ -73,25 +62,20 @@
           <span>L</span>
           <img
             src="/img/sort-amount-up-alt-solid.svg"
-            alt
-            :class="{
-              sortisactive:
-                teamNameOrderProp != 'pending' && sortByNameProp === 'losses'
-            }"
             v-if="
               sortByNameProp !== 'losses' ||
-                (sortByNameProp == 'losses' && teamNameOrderProp == 'pending')
+                (sortByNameProp == 'losses' && sortStateProp == 'pending')
             "
           />
           <img
             :class="{
               sortisactive:
-                teamNameOrderProp != 'pending' && sortByNameProp === 'losses'
+                sortStateProp != 'pending' && sortByNameProp === 'losses'
             }"
             :src="
-              teamNameOrderProp === 'asc' && sortByNameProp === 'losses'
+              sortStateProp === 'asc' && sortByNameProp === 'losses'
                 ? '/img/sort-amount-up-alt-solid.svg'
-                : teamNameOrderProp === 'desc' && sortByNameProp === 'losses'
+                : sortStateProp === 'desc' && sortByNameProp === 'losses'
                 ? '/img/sort-amount-down-alt-solid.svg'
                 : ''
             "
@@ -105,25 +89,20 @@
           <span>Win PCT</span>
           <img
             src="/img/sort-amount-up-alt-solid.svg"
-            alt
-            :class="{
-              sortisactive:
-                teamNameOrderProp != 'pending' && sortByNameProp === 'winPct'
-            }"
             v-if="
               sortByNameProp !== 'winPct' ||
-                (sortByNameProp == 'winPct' && teamNameOrderProp == 'pending')
+                (sortByNameProp == 'winPct' && sortStateProp == 'pending')
             "
           />
           <img
             :class="{
               sortisactive:
-                teamNameOrderProp != 'pending' && sortByNameProp === 'winPct'
+                sortStateProp != 'pending' && sortByNameProp === 'winPct'
             }"
             :src="
-              teamNameOrderProp === 'asc' && sortByNameProp === 'winPct'
+              sortStateProp === 'asc' && sortByNameProp === 'winPct'
                 ? '/img/sort-amount-up-alt-solid.svg'
-                : teamNameOrderProp === 'desc' && sortByNameProp === 'winPct'
+                : sortStateProp === 'desc' && sortByNameProp === 'winPct'
                 ? '/img/sort-amount-down-alt-solid.svg'
                 : ''
             "
@@ -137,25 +116,20 @@
           <span>GB</span>
           <img
             src="/img/sort-amount-up-alt-solid.svg"
-            alt
-            :class="{
-              sortisactive:
-                teamNameOrderProp != 'pending' && sortByNameProp === 'gb'
-            }"
             v-if="
               sortByNameProp !== 'gb' ||
-                (sortByNameProp == 'gb' && teamNameOrderProp == 'pending')
+                (sortByNameProp == 'gb' && sortStateProp == 'pending')
             "
           />
           <img
             :class="{
               sortisactive:
-                teamNameOrderProp != 'pending' && sortByNameProp === 'gb'
+                sortStateProp != 'pending' && sortByNameProp === 'gb'
             }"
             :src="
-              teamNameOrderProp === 'asc' && sortByNameProp === 'gb'
+              sortStateProp === 'asc' && sortByNameProp === 'gb'
                 ? '/img/sort-amount-up-alt-solid.svg'
-                : teamNameOrderProp === 'desc' && sortByNameProp === 'gb'
+                : sortStateProp === 'desc' && sortByNameProp === 'gb'
                 ? '/img/sort-amount-down-alt-solid.svg'
                 : ''
             "
@@ -171,7 +145,7 @@
     </thead>
     <transition-group name="list-complete" tag="tbody">
       <tr
-        v-for="team in tempEast"
+        v-for="team in tempData"
         :key="team.teamId"
         class="list-complete-item"
         :class="{ isTop8: team.top8, 'west': tabWest, 'league': tabLeague }"
@@ -206,16 +180,16 @@
 export default {
   name: "DataTable",
   props: {
-    east: {
+    mainData: {
       type: [Array, Object]
     },
-    tempEast: {
+    tempData: {
       type: [Array, Object]
     },
     sortByName: {
       type: String
     },
-    teamNameOrder: {
+    sortState: {
       type: String
     }, 
     tabWest: {
@@ -230,7 +204,7 @@ export default {
     return {
       count: 0,
       sort: false,
-      teamNameOrderProp: this.teamNameOrder,
+      sortStateProp: this.sortState,
       sortByNameProp: this.sortByName,
       toggleColumn: false
     };
@@ -238,47 +212,47 @@ export default {
   methods: {
     objSort(sortBy) {
       if (this.sortByNameProp != sortBy && this.sort === true) {
-        this.tempEast = JSON.parse(JSON.stringify(this.east));
+        this.tempData = JSON.parse(JSON.stringify(this.mainData));
         this.count = 0;
         this.sort = false;
       }
       this.sortByNameProp = sortBy;
       this.count++;
       if (this.count === 3) {
-        this.tempEast = JSON.parse(JSON.stringify(this.east));
+        this.tempData = JSON.parse(JSON.stringify(this.mainData));
         this.count = 0;
         this.sort = false;
-        this.teamNameOrderProp = "pending";
+        this.sortStateProp = "pending";
       } else {
         if (this.sort) {
-          this.tempEast.reverse();
-          this.teamNameOrderProp = "desc";
+          this.tempData.reverse();
+          this.sortStateProp = "desc";
         } else {
           if (sortBy === "teamName") {
-            this.tempEast.sort((a, b) =>
+            this.tempData.sort((a, b) =>
               a.teamSitesOnly.teamName > b.teamSitesOnly.teamName ? 1 : -1
             );
           } else if (sortBy === "wins") {
-            this.tempEast.sort((a, b) =>
+            this.tempData.sort((a, b) =>
               parseInt(a.win) > parseInt(b.win) ? 1 : -1
             );
           } else if (sortBy === "losses") {
-            this.tempEast.sort((a, b) =>
+            this.tempData.sort((a, b) =>
               parseInt(a.loss) > parseInt(b.loss) &&
               parseInt(a.win) > parseInt(b.win)
                 ? -1
                 : 1
             );
           } else if (sortBy === "winPct") {
-            this.tempEast.sort((a, b) =>
+            this.tempData.sort((a, b) =>
               parseFloat(a.winPct) > parseFloat(b.winPct) ? 1 : -1
             );
           } else if (sortBy === "gb") {
-            this.tempEast.sort((a, b) =>
+            this.tempData.sort((a, b) =>
               parseFloat(a.gamesBehind) > parseFloat(b.gamesBehind) ? 1 : -1
             );
           }
-          this.teamNameOrderProp = "asc";
+          this.sortStateProp = "asc";
         }
         this.sort = true;
       }
@@ -286,9 +260,9 @@ export default {
     }
   },
   created() {
-    this.east = this.east;
-    this.tempEast = this.tempEast;
-    this.tempEast = JSON.parse(JSON.stringify(this.east));
+    this.mainData = this.mainData;
+    this.tempData = this.tempData;
+    this.tempData = JSON.parse(JSON.stringify(this.mainData));
   }
 };
 </script>
