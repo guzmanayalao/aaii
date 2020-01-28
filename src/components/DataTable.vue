@@ -211,23 +211,28 @@ export default {
   },
   methods: {
     objSort(sortBy) {
+      // If the user sorts a column while another one is still being sorted, revert the data to original state
       if (this.sortByNameProp != sortBy && this.sort === true) {
         this.tempData = JSON.parse(JSON.stringify(this.mainData));
         this.count = 0;
         this.sort = false;
       }
+      //Set the sortBy data to the paramter passed in the function
       this.sortByNameProp = sortBy;
       this.count++;
+      //If its the 3rd click, the user has clicked through both asc and desc states, therefore reset the data to pending.
       if (this.count === 3) {
         this.tempData = JSON.parse(JSON.stringify(this.mainData));
         this.count = 0;
         this.sort = false;
         this.sortStateProp = "pending";
-      } else {
+      } else { 
+        //If the data has been sorted then the state is asc, so reverse it to make it desc
         if (this.sort) {
           this.tempData.reverse();
           this.sortStateProp = "desc";
-        } else {
+        } else { 
+          //If the data hasn't been sorted, aka its the first click, sort the data in an asc order based on the sortBy parameter
           if (sortBy === "teamName") {
             this.tempData.sort((a, b) =>
               a.teamSitesOnly.teamName > b.teamSitesOnly.teamName ? 1 : -1
@@ -252,14 +257,17 @@ export default {
               parseFloat(a.gamesBehind) > parseFloat(b.gamesBehind) ? 1 : -1
             );
           }
+          //set it to 'asc'
           this.sortStateProp = "asc";
         }
+        //define the sort state as true
         this.sort = true;
       }
       return;
     }
   },
   created() {
+    // When the component is created in the virtual dom, set the props to data that we can manipulate (its a bad idea to manipulate props bassed from the parent directly)
     this.mainData = this.mainData;
     this.tempData = this.tempData;
     this.tempData = JSON.parse(JSON.stringify(this.mainData));
@@ -268,6 +276,7 @@ export default {
 </script>
 
 <style lang="scss">
+//Bunch of animation stuff
 .fade-enter-active,
 .fade-leave-active {
   transition: all 0.3s;
@@ -288,13 +297,9 @@ export default {
 .list-complete-leave-active {
   position: absolute;
 }
+//color the top 8 teams a different color, depending on their conf
 .isTop8 {
-  background: linear-gradient(
-    180deg,
-    rgba(147, 230, 255, 0.145) 0%,
-    rgba(151, 231, 251, 0.18) 100%
-  );
-
+  background: rgba(147, 230, 255, 0.145);
   border: 1px solid white;
   position: relative;
   z-index: 1;
@@ -311,7 +316,6 @@ export default {
     &:hover {
       background: darken(rgba(0,0,0,0.05), 2);
     }
-
   }
   &:hover {
     td {
@@ -320,6 +324,7 @@ export default {
     }
   }
 }
+//quick and dirty way to show/hide
 .showMobile {
   display: none; 
   @media screen and (max-width: 600px) {
@@ -334,7 +339,7 @@ export default {
     display: none;
   }
 }
-
+//Wraps the h1 and table together 
 .tableWrapper {
   display: flex;
   align-items: flex-start;
